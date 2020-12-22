@@ -28,11 +28,11 @@ class Card:
 		# Out of bounds will set value to zero
 		if value < 2 or value > 14:
 			# revisit stderr write, conflicts with unit tests
-			error.write("Invalid card value! Trying to create card with value {}\n".format(value))
+			error.write("Invalid card value {}! Continuing with card value 0.\n".format(value))
 			value = 2
 		# Out of bounds will set suit to zero
 		if suit < 0 or suit > 3:
-			error.write("Invalid card suit! Trying to create card with suit {}\n".format(suit))
+			error.write("Invalid card suit {}! Continuing with card suit 0.\n".format(suit))
 			suit = 0
 
 		self.value = value
@@ -46,7 +46,7 @@ class Card:
 	def fromID(cls, id_):
 		# Out of bounds will set id_ to zero
 		if id_ < 0 or id_ > 51:
-			error.write("Invalid card id! Trying to create card with id {}\n".format(id_))
+			error.write("Invalid card ID {}! Continuing with card ID 0.\n".format(id_))
 			id_ = 0
 		return cls(((id_ % 13) + 2),math.floor(id_ / 13))
 
