@@ -1,5 +1,9 @@
+from io import StringIO
 import math
 import unittest
+import sys
+
+error = sys.stderr
 
 """ id to (value,suit) mapping
 
@@ -23,9 +27,12 @@ class Card:
 	def __init__(self, value, suit):
 		# Out of bounds will set value to zero
 		if value < 2 or value > 14:
-			value = 0
+			# revisit stderr write, conflicts with unit tests
+			error.write("Invalid card value! Trying to create card with value {}\n".format(value))
+			value = 2
 		# Out of bounds will set suit to zero
 		if suit < 0 or suit > 3:
+			error.write("Invalid card suit! Trying to create card with suit {}\n".format(suit))
 			suit = 0
 
 		self.value = value
@@ -39,6 +46,7 @@ class Card:
 	def fromID(cls, id_):
 		# Out of bounds will set id_ to zero
 		if id_ < 0 or id_ > 51:
+			error.write("Invalid card id! Trying to create card with id {}\n".format(id_))
 			id_ = 0
 		return cls(((id_ % 13) + 2),math.floor(id_ / 13))
 
@@ -101,6 +109,14 @@ class Card:
 	def __repr__(self):
 		return self.__str__()
 
+	""" __eq__()
+	Override equality - return true if the ID's of the cards are the same. NOT checking
+		if the objects are the same
+	@return true if self.id = other.id
+	"""
+	def __eq__(self, other):
+		return self.getID() == other.getID()
+
 
 
 """=================================================================================
@@ -109,22 +125,69 @@ Card Class Unit Tests
 
 class TestCardClass(unittest.TestCase):
 
-	# Test the ways to create a card
-	def test_init(self):
+	# Test valid ways to create a card
+	def test_valid_init(self):
 		a = Card(2,1)
-		self.assertTrue(a.getID(),13)
-		self.assertTrue(a.getValue(),2)
-		self.assertTrue(a.getSuit(),1)
-		self.assertTrue(a.__str__(),"2 of Diamonds")
+		self.assertEqual(a.getID(),13)
+		self.assertEqual(a.getValue(),2)
+		self.assertEqual(a.getSuit(),1)
+		self.assertEqual(a.__str__(),"2 of Diamonds")
 
 		b = Card.fromID(13)
 		self.assertEqual(a,b)
-		self.assertTrue(b.getID(),13)
-		self.assertTrue(b.getValue(),2)
-		self.assertTrue(b.getSuit(),1)
-		self.assertTrue(b.__str__(),"2 of Diamonds")
+		self.assertEqual(b.getID(),13)
+		self.assertEqual(b.getValue(),2)
+		self.assertEqual(b.getSuit(),1)
+		self.assertEqual(b.__str__(),"2 of Diamonds")
 
-	# Test
+		c = Card(7,2)
+		self.assertEqual(c.getID(),31)
+		self.assertEqual(c.getValue(),7)
+		self.assertEqual(c.getSuit(),2)
+		self.assertEqual(c.__str__(),"7 of Clubs")
+
+		d = Card.fromID(31)
+		self.assertEqual(c,d)
+		self.assertEqual(d.getID(),31)
+		self.assertEqual(d.getValue(),7)
+		self.assertEqual(d.getSuit(),2)
+		self.assertEqual(d.__str__(),"7 of Clubs")
+
+	# Test invalid creations
+	def test_invalid_init(self):
+		a = Card(47,2)
+		self.assertEqual(a.getValue(),2)
+		self.assertEqual(a.getSuit(),2)
+		self.assertEqual(a.__str__(),"2 of Clubs")
+
+		b = Card(0,2)
+		self.assertEqual(b.getValue(),2)
+		self.assertEqual(b.getSuit(),2)
+		self.assertEqual(b.__str__(),"2 of Clubs")
+
+		c = Card(5,-1)
+		self.assertEqual(c.getValue(),5)
+		self.assertEqual(c.getSuit(),0)
+		self.assertEqual(c.__str__(),"5 of Spades")
+
+		d = Card(5,4)
+		self.assertEqual(d.getValue(),5)
+		self.assertEqual(d.getSuit(),0)
+		self.assertEqual(d.__str__(),"5 of Spades")
+
+		e = Card.fromID(-1)
+		self.assertEqual(e.getValue(),2)
+		self.assertEqual(e.getSuit(),0)
+		self.assertEqual(e.__str__(),"2 of Spades")
+
+		f = Card.fromID(52)
+		self.assertEqual(f.getValue(),2)
+		self.assertEqual(f.getSuit(),0)
+		self.assertEqual(f.__str__(),"2 of Spades")
+
+
 
 if __name__ == '__main__':
+	# Divert stderr so unittest output isn't cluttered
+	error = StringIO() 
 	unittest.main()
