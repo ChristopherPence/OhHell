@@ -8,13 +8,15 @@ id = (value - 2) + (suit * 13)
 
 value = (id % 13) + 2
 suit = floor(id / 13)
-
 """
 
+""" Card Class
+"Immutable" class that represents a singular real world playing card
+"""
 class Card:
 	# Default Constructor - set the value of the card given value and suit
 	# @param 	value 	: int in range [2,14] stores card value [2,3, ... ,10,J,Q,K,A]
-	# @param 	suit	: int in range [0,3] stores card suit [H,D,C,S]
+	# @param 	suit	: int in range [0,3] stores card suit [S,D,C,H]
 	def __init__(self, value, suit):
 		# Out of bounds will set value to zero
 		if value < 2 or value > 14:
@@ -61,12 +63,14 @@ class Card:
 
 	# Override string - convert the value and suit to a string
 	# @return 	string in format "{value} of {suit}"
+	# @source
+	# 	https://www.geeksforgeeks.org/switch-case-in-python-replacement/
 	def __str__(self):
 		suit_switcher = {
-			0 : "Hearts",
+			0 : "Spades",
 			1 : "Diamonds",
 			2 : "Clubs",
-			3 : "Spades"
+			3 : "Hearts"
 		}
 
 		value_switcher = {
@@ -86,3 +90,8 @@ class Card:
 		}
 
 		return "{} of {}".format(value_switcher.get(self.value),suit_switcher.get(self.suit))
+
+	# Override representation - convert the value and suit to a string
+	# @return 	string in format "{value} of {suit}"
+	def __repr__(self):
+		return self.__str__()
