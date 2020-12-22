@@ -3,7 +3,8 @@ import math
 import unittest
 import sys
 
-error = sys.stderr
+# Globals
+ERROR = sys.stderr
 
 """ id to (value,suit) mapping
 
@@ -19,6 +20,9 @@ Card Class
 
 """ Card Class
 "Immutable" class that represents a singular real world playing card
+
+@author Chris P.
+@created 2020-12-21 YMD
 """
 class Card:
 	# Default Constructor - set the value of the card given value and suit
@@ -28,11 +32,11 @@ class Card:
 		# Out of bounds will set value to zero
 		if value < 2 or value > 14:
 			# revisit stderr write, conflicts with unit tests
-			error.write("Invalid card value {}! Continuing with card value 0.\n".format(value))
+			ERROR.write("Invalid card value {}! Continuing with card value 0.\n".format(value))
 			value = 2
 		# Out of bounds will set suit to zero
 		if suit < 0 or suit > 3:
-			error.write("Invalid card suit {}! Continuing with card suit 0.\n".format(suit))
+			ERROR.write("Invalid card suit {}! Continuing with card suit 0.\n".format(suit))
 			suit = 0
 
 		self.value = value
@@ -46,7 +50,7 @@ class Card:
 	def fromID(cls, id_):
 		# Out of bounds will set id_ to zero
 		if id_ < 0 or id_ > 51:
-			error.write("Invalid card ID {}! Continuing with card ID 0.\n".format(id_))
+			ERROR.write("Invalid card ID {}! Continuing with card ID 0.\n".format(id_))
 			id_ = 0
 		return cls(((id_ % 13) + 2),math.floor(id_ / 13))
 
