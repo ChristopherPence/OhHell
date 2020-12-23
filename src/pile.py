@@ -54,7 +54,7 @@ class Pile(ABC):
 
 	""" fromList(lis)
 	Creates a pile object containing cards with IDs corresponding to the ints in lis
-	@param lis 	: [int] - list of card IDs
+	@param lis : [int] - list of card IDs
 	@return a corresponding Pile object
 	"""
 	@classmethod
@@ -93,7 +93,7 @@ class Pile(ABC):
 		self.hand.clear()
 
 	# ------------------------------------------------------------------------------
-	# Class Methods
+	# Python Methods
 
 	""" __len__()
 	Overrides the __len__ method and returns the size of hand list in a Pile object

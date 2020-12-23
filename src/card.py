@@ -6,14 +6,6 @@ import sys
 # Globals
 ERROR = sys.stderr
 
-""" id to (value,suit) mapping
-
-id = (value - 2) + (suit * 13)
-...
-value = (id % 13) + 2
-suit = floor(id / 13)
-"""
-
 """=================================================================================
 Card Class
 =================================================================================""" 
@@ -42,10 +34,14 @@ class Card:
 		self.value = value
 		self.suit = suit
 
-	# "Overloaded" constructor - set the values of the card given an id in range [0,51]
-	# @param	id 		: int in range [0,51] which is the unique card id
-	# @return 	a corresponding Card object
-	# @see		card id to card (value,suit) mapping above
+	# ------------------------------------------------------------------------------
+	# Static Methods
+
+	""" fromID(id_)
+	"Overloaded" constructor - set the values of the card given an id in range [0,51]
+	@param	id 		: int in range [0,51] which is the unique card id
+	@return 	a corresponding Card object
+	"""
 	@classmethod
 	def fromID(cls, id_):
 		# Out of bounds will set id_ to zero
@@ -53,6 +49,9 @@ class Card:
 			ERROR.write("Invalid card ID {}! Continuing with card ID 0.\n".format(id_))
 			id_ = 0
 		return cls(((id_ % 13) + 2),math.floor(id_ / 13))
+
+	# ------------------------------------------------------------------------------
+	# Public Methods
 
 	""" getValue()
 	Gets the value of the card
@@ -74,6 +73,9 @@ class Card:
 	"""
 	def getID(self):
 		return ((self.value - 2) + (self.suit * 13))
+
+	# ------------------------------------------------------------------------------
+	# Python Methods
 
 	""" __str__()
 	Override string - convert the value and suit to a string
@@ -113,7 +115,7 @@ class Card:
 	def __repr__(self):
 		return self.__str__()
 
-	""" __eq__()
+	""" __eq__(other)
 	Override equality - return true if the ID's of the cards are the same. NOT checking
 		if the objects are the same
 	@return true if self.id = other.id
@@ -193,5 +195,5 @@ class TestCardClass(unittest.TestCase):
 
 if __name__ == '__main__':
 	# Divert stderr so unittest output isn't cluttered
-	error = StringIO() 
+	ERROR = StringIO() 
 	unittest.main()
