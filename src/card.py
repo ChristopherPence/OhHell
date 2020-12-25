@@ -123,6 +123,12 @@ class Card:
 	def __eq__(self, other):
 		return self.getID() == other.getID()
 
+	def __lt__(self, other):
+		return self.getID() < other.getID()
+
+	def __le__(self, other):
+		return self.getID() <= other.getID()
+
 
 
 """=================================================================================

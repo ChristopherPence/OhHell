@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
 import sys
-import random
+import unittest
+from io import StringIO
 
 # Local imports
 from card import *
@@ -14,46 +14,25 @@ Pile Class
 ================================================================================="""
 
 """ Pile Class
-Abstract class representing a real life "pile" of cards. Has the Deck and Hand classes
-	as children. A deck is the main pile of cards while a hand belongs to a player.
+A class representing a real life "pile" of cards.
 
 @author Chris P.
 @created 2020-12-21 YMD
 """
-class Pile(ABC):
-	# Constructor
+class Pile():
+	"""__init__
+	Default Constructor - creates an empty pile object with the optional max_size parameter
+	@param max_size : INT coressponding to the maximum size of the pile
+	"""
 	def __init__(self, max_size=MAX_SIZE):
 		self.max_size = max_size
-		self.hand = []
-
-	# ------------------------------------------------------------------------------
-	# Abstract Methods
-
-	# Insert a card into the pile at a specified location, default 0
-	@abstractmethod
-	def insert(self, card, location=0):
-		pass
-
-	# Remove a specified card from the pile
-	@abstractmethod
-	def remove(self, card):
-		pass
-
-	# Push a card to the front of the pile (start of the list)
-	@abstractmethod
-	def push(self, card):
-		pass
-
-	# Pop a card from the front of the pile (start of the list)
-	@abstractmethod
-	def pop(self):
-		pass
+		self.cards = []
 
 	# ------------------------------------------------------------------------------
 	# Static Methods
 
 	""" fromList(lis)
-	Creates a pile object containing cards with IDs corresponding to the ints in lis
+	"Overloaded" constructor - Creates a pile object containing cards with IDs corresponding to the ints in lis
 	@param lis : [int] - list of card IDs
 	@return a corresponding Pile object
 	"""
@@ -61,36 +40,67 @@ class Pile(ABC):
 	def fromList(cls, lis, max_size=MAX_SIZE):
 		output = cls(max_size)
 		for i in lis:
-			output.push(Card.fromID(i))
+			output.append(Card.fromID(i))
 		return output
 
 	# ------------------------------------------------------------------------------
 	# Public Methods
+
+	""" insert(card, location)
+	Inserts a card at the given location. Default location is 0.
+	@param card : Card - the card to insert into the deck. Cards are "immutable" and singletons so shallow copy
+	@param location : INT - the location in the pile to insert the card. Default is 0
+	"""
+	def insert(self, card, location=0):
+		return self.cards.insert(location,card)
+
+	""" remove(card)
+	Removes a specified card from the list if present. It will only remove one instance of the card. 
+		Potentially unsafe if List.remove() features change...
+	@param card : Card that represents the card to remove
+	"""
+	def remove(self, card):
+		return self.cards.remove(card)
+
+	""" push(card)
+	Push a card to the front (location 0) of the list. Carried out by calling Pile.insert()
+	@param card : Card - the card to push to the front. See the notes for Pile.insert()
+	"""
+	def push(self, card):
+		return self.insert(card,0)
+
+	""" pop()
+	Pop a card from the front of the list
+	@return Card that was at the front of the list
+	"""
+	def pop(self):
+		return self.cards.pop(0)
+
+	""" append(card)
+	Append a card to the end of the list
+	@param card : Card - The card to append to the end of the list. See the notes for Pile.insert() about copies
+	"""
+	def append(self, card):
+		return self.cards.append(card)
+
+	""" sort()
+	Numerically sorts the contents of self.cards
+	"""
+	def sort(self):
+		self.cards.sort()
+
+	""" clear()
+	Removes all of contents from self.hand
+	"""
+	def clear(self):
+		self.cards.clear()
 
 	""" getSize()
 	Returns the size of hand list in a Pile object
 	@return length of self.hand
 	"""
 	def getSize(self):
-		return len(self.hand)
-
-	""" shuffle()
-	Randomly orders the contents of self.hand 
-	"""
-	def shuffle(self):
-		random.shuffle(self.hand)
-
-	""" sort()
-	Numerically sorts the contents of self.hand
-	"""
-	def sort(self):
-		self.hand.sort()
-
-	""" clear()
-	Removes all of contents from self.hand
-	"""
-	def clear(self):
-		self.hand.clear()
+		return len(self.cards)
 
 	# ------------------------------------------------------------------------------
 	# Python Methods
@@ -107,7 +117,7 @@ class Pile(ABC):
 	@return string representation of self.hand
 	"""
 	def __str__(self):
-		return self.hand.__str__()
+		return self.cards.__str__()
 
 	""" __repr__()
 	Overrides the __repr__ method and returns a string 
@@ -115,55 +125,3 @@ class Pile(ABC):
 	"""
 	def __repr__(self):
 		return self.__str__()
-
-
-
-"""=================================================================================
-Hand Class
-=================================================================================""" 
-
-
-"""
-hand field is a list. The order is representative of a left to right hand. Therefore
-0 is the leftmost card and n is the rightmost card. In this case we consider 0 tp be
-the start of the list and n to be the end.
-"""
-
-class Hand(Pile):
-
-	# Default Constructor - set the value of the card given value and suit
-	# @param 	max_size	: int of the maximum number of cards allowed in the hand
-	def __init__(self, max_size=sys.maxsize):
-		self.max_size = max_size
-		self.hand = []
-
-
-
-
-
-
-	# Insert before the specified element
-	def insert(self, card, location = 0):
-		return self.hand.insert(location, card)
-
-	def remove(self, card):
-		return
-
-
-	def push(self, card):
-		return self.insert(card,0)
-
-	def pop(self):
-		return 
-
-
-
-
-chris = Hand()
-
-chris.push(Card.fromID(47))
-chris.push(Card.fromID(24))
-chris.push(Card.fromID(36))
-chris.push(Card(47,2))
-
-print(chris)
