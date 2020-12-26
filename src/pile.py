@@ -4,7 +4,7 @@ import random
 from io import StringIO
 
 # Local imports
-from card import *
+from card import Card
 from error import *
 
 # Globals
