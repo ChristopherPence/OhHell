@@ -16,3 +16,6 @@ deck:
 
 deck_simulation:
 	python3 src/deck_simulation.py
+
+player:
+	python3 src/player.py

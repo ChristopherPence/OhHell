@@ -68,7 +68,7 @@ class Pile():
 	@param card : Card that represents the card to remove
 	"""
 	def remove(self, card):
-		return self.cards.remove(card)
+		self.cards.remove(card)
 
 	""" push(card)
 	Push a card to the front (location 0) of the list. Carried out by calling Pile.insert()
@@ -144,7 +144,7 @@ class Pile():
 
 	""" __contains__(other)
 	Checks if other (a card Object...) is contained within the pile
-	@pre type(other) == Card
+	Precondition: type(other) == Card
 	@param other : Card - the card to check the presence of.
 	"""
 	def __contains__(self, other):
@@ -154,6 +154,12 @@ class Pile():
 			return True
 		else:
 			return False
+
+	def __iter__(self):
+		return self.cards.__iter__()
+
+	def __next__(self):
+		return self.cards.__next__()
 
 
 
@@ -233,6 +239,17 @@ class TestPileClass(unittest.TestCase):
 		self.assertTrue(deck.getSize() == 104)
 		deck.sort()
 		self.assertEqual(deck.__str__(),"""[2 of Spades, 2 of Spades, 3 of Spades, 3 of Spades, 4 of Spades, 4 of Spades, 5 of Spades, 5 of Spades, 6 of Spades, 6 of Spades, 7 of Spades, 7 of Spades, 8 of Spades, 8 of Spades, 9 of Spades, 9 of Spades, 10 of Spades, 10 of Spades, Jack of Spades, Jack of Spades, Queen of Spades, Queen of Spades, King of Spades, King of Spades, Ace of Spades, Ace of Spades, 2 of Diamonds, 2 of Diamonds, 3 of Diamonds, 3 of Diamonds, 4 of Diamonds, 4 of Diamonds, 5 of Diamonds, 5 of Diamonds, 6 of Diamonds, 6 of Diamonds, 7 of Diamonds, 7 of Diamonds, 8 of Diamonds, 8 of Diamonds, 9 of Diamonds, 9 of Diamonds, 10 of Diamonds, 10 of Diamonds, Jack of Diamonds, Jack of Diamonds, Queen of Diamonds, Queen of Diamonds, King of Diamonds, King of Diamonds, Ace of Diamonds, Ace of Diamonds, 2 of Clubs, 2 of Clubs, 3 of Clubs, 3 of Clubs, 4 of Clubs, 4 of Clubs, 5 of Clubs, 5 of Clubs, 6 of Clubs, 6 of Clubs, 7 of Clubs, 7 of Clubs, 8 of Clubs, 8 of Clubs, 9 of Clubs, 9 of Clubs, 10 of Clubs, 10 of Clubs, Jack of Clubs, Jack of Clubs, Queen of Clubs, Queen of Clubs, King of Clubs, King of Clubs, Ace of Clubs, Ace of Clubs, 2 of Hearts, 2 of Hearts, 3 of Hearts, 3 of Hearts, 4 of Hearts, 4 of Hearts, 5 of Hearts, 5 of Hearts, 6 of Hearts, 6 of Hearts, 7 of Hearts, 7 of Hearts, 8 of Hearts, 8 of Hearts, 9 of Hearts, 9 of Hearts, 10 of Hearts, 10 of Hearts, Jack of Hearts, Jack of Hearts, Queen of Hearts, Queen of Hearts, King of Hearts, King of Hearts, Ace of Hearts, Ace of Hearts]""")
+
+	def test_iteration(self):
+		self.rumy1.push(Card.fromID(33))
+		self.rumy1.push(Card.fromID(47))
+		self.rumy1.push(Card.fromID(21))
+
+		result = ""
+		for i in self.rumy1:
+			result += str(i)
+
+		self.assertEqual(result, "10 of Diamonds10 of Hearts9 of Clubs")
 
 	def tearDown(self):
 		self.poker1.clear()
