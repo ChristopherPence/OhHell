@@ -3,7 +3,7 @@ import unittest
 from io import StringIO
 
 # Local imports
-from pile import *
+from pile import Pile
 
 # Globals
 MAX_SIZE = sys.maxsize
@@ -23,7 +23,7 @@ A class representing a real life deck of cards. For the context of games it can
 """
 class Deck(Pile):
 
-	def __init__(self, max_size=MAX_SIZE):
+	def __init__(self, max_size=MAX_SIZE, enforce_order=False):
 		super().__init__(max_size)
 
 

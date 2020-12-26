@@ -3,8 +3,8 @@ import math
 import unittest
 import sys
 
-# Globals
-ERROR = sys.stderr
+# Local imports
+from error import *
 
 """=================================================================================
 Card Class

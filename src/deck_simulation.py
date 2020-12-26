@@ -4,7 +4,8 @@ from io import StringIO
 import random
 
 # Local imports
-from deck import *
+from deck import Deck
+from card import Card
 
 # Globals
 MAX_SIZE = sys.maxsize
@@ -21,7 +22,7 @@ hi
 class DeckSimulation(Deck):
 
 	def __init__(self, max_size=MAX_SIZE):
-		super().__init__(max_size)
+		super().__init__(max_size, False)
 
 	""" shuffle()
 	Randomly orders the contents of self.hand 
@@ -31,7 +32,8 @@ class DeckSimulation(Deck):
 
 
 deck = DeckSimulation(52)
-deck.push(Card(3,3))
+deck.push(Card.fromID(47))
+deck.push(Card.fromID(33))
 deck.push(Card(4,3))
 deck.push(Card(12,1))
 
