@@ -65,5 +65,10 @@ class Game():
 		self.gamestate = Gamestate(deck, players)
 		print(self.gamestate)
 
+		print(self.gamestate.deckToPlayer(Card(2,2), players[0]))
+		print(self.gamestate.deckToPlayer(Card(2,2), players[0]))
+
+		print(self.gamestate)
+
 		# Start the first action
 		print("Actions not implemented yet. Ending game.")

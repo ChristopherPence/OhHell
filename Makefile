@@ -22,3 +22,6 @@ deck_simulation:
 
 player:
 	python3 src/player.py
+
+gamestate:
+	python3 src/gamestate.py
