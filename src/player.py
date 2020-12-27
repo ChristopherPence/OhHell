@@ -31,7 +31,7 @@ class Player():
 	@param id : String - a unique player ID in case of overlapping names. In format 
 		"name-UNIXtimestamp"
 	"""
-	def __init__(self, name, id_):
+	def __init__(self, name, id_, max_size=MAX_SIZE):
 		self.name = name
 		self.id = id_
 		self.hand = Pile()

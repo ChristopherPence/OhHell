@@ -60,7 +60,7 @@ class Gamestate():
 
 	""" setGameAttribute(key, value)
 	Adds or edits a key/value pair in the self.attributes dictionary. If the key exists
-		it updates to the new value
+		it updates the pair with the new value.
 	Postcondition self.attributes.get(key) == value
 	@param key : String - the key to search for in the dictionary
 	@param value : Any - the value to associate with key in the dictionary
@@ -75,7 +75,7 @@ class Gamestate():
 		self.attributes.update({key:value})
 		return old
 
-	""" removeGameAttribute(key, value)
+	""" removeGameAttribute(key)
 	Removes a key value pair from self.attributes. Returns the value of the removed pair.
 		Returns nothing if the key didn't exist
 	Postcondition self.attributes.get(key) == None
@@ -180,7 +180,7 @@ class TestGamestateClass(unittest.TestCase):
 			deck2.append(Card.fromID(i))
 
 		# Build the players
-		self.players = [Player("Arron","A-1"), Player("Becky","B-1"), Player("Chris", "C-1"), Player("Danny", "D-1")]
+		self.players = [Player("Arron","A-1"), Player("Becky","B-1"), Player("Chris", "C-1"), Player("Danny", "D-1",2)]
 		self.single = Gamestate(deck, self.players)
 		self.double = Gamestate(deck2, self.players)
 
@@ -222,6 +222,80 @@ class TestGamestateClass(unittest.TestCase):
 		test5 = self.double.deckToPlayer(Card(2,2), self.players[0])
 		self.assertTrue(test4)
 		self.assertTrue(test5)
+
+	def test_playerToDeck(self):
+		# Test moving a card from the deck to the player and back with error
+		test1 = self.single.deckToPlayer(Card(2,2), self.players[0])
+		self.assertTrue(Card(2,2) not in self.single.deck)
+		self.assertTrue(Card(2,2) in self.players[0])
+		test2 = self.single.playerToDeck(self.players[0], Card(2,2))
+		test3 = self.single.playerToDeck(self.players[0], Card(2,2))
+		self.assertTrue(test1)
+		self.assertTrue(test2)
+		self.assertFalse(test3)
+		self.assertTrue(Card(2,2) in self.single.deck)
+		self.assertTrue(Card(2,2) not in self.players[0])
+
+		# Test dealing same card with 2 decks
+		test4 = self.double.deckToPlayer(Card(2,2), self.players[0])
+		test5 = self.double.deckToPlayer(Card(2,2), self.players[0])
+		self.assertTrue(test4)
+		self.assertTrue(test5)
+		test6 = self.double.playerToDeck(self.players[0], Card(2,2))
+		test7 = self.double.playerToDeck(self.players[0], Card(2,2))
+		self.assertTrue(test6)
+		self.assertTrue(test7)
+
+	def test_pileToPlayer(self):
+		# Setup piles
+		self.single.piles[0] = Pile(max_size=5)
+		self.single.piles[1] = Pile(enforce_order=True)
+		self.single.piles[0].push(Card(2,1))
+		self.single.piles[1].push(Card(2,2))
+		self.single.piles[1].push(Card(2,3))
+
+		# Pile doesn't exist
+		test1 = self.single.pileToPlayer(2, self.players[0], Card(2,1))
+		self.assertFalse(test1)
+		self.assertTrue(Card(2,1) not in self.players[0])
+
+		# Player doesn't exist
+		test2 = self.single.pileToPlayer(0, Player("Zulu", "Z-1"), Card(2,1))
+		self.assertFalse(test2)
+		self.assertTrue(Card(2,1) in self.single.piles[0])
+
+		# Card doesn't exist
+		test3 = self.single.pileToPlayer(0, self.players[0], Card(2,0))
+		self.assertFalse(test3)
+		self.assertTrue(Card(2,0) not in self.players[0])
+		self.assertTrue(Card(2,0) not in self.single.piles[0])
+
+		# Player with max_size
+		test3 = self.single.pileToPlayer(0, self.players[4], Card(2,1))
+		test4 = self.single.pileToPlayer(1, self.players[4], Card(2,2))
+		test5 = self.single.pileToPlayer(1, self.players[4], Card(2,3))
+		self.assertTrue(test3)
+		self.assertTrue(test4)
+		self.assertFalse(test5)
+		self.assertTrue(Card(2,1) in self.players[4])
+		self.assertTrue(Card(2,2) in self.players[4])
+		self.assertTrue(Card(2,3) not in self.players[4])
+		self.assertTrue(Card(2,1) not in self.single.piles[0])
+		self.assertTrue(Card(2,2) not in self.single.piles[1])
+		self.assertTrue(Card(2,3) in self.single.piles[1])
+
+		# Postconditions
+		test6 = self.single.pileToPlayer(1, self.players[0], Card(2,3))
+		self.assertTrue(test6)
+		self.assertTrue(Card(2,3) in self.players[0])
+		self.assertTrue(Card(2,3) not in self.single.piles[1])
+
+	def test_playerToPile(self):
+
+
+
+
+
 
 	def tearDown(self):
 		self.single = None
