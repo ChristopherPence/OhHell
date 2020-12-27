@@ -1,4 +1,7 @@
-default: pile
+default: app
+
+app: 
+	python3 src/app.py
 
 dev: 
 	python3 src/pile.py

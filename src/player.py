@@ -31,9 +31,9 @@ class Player():
 	@param id : String - a unique player ID in case of overlapping names. In format 
 		"name-UNIXtimestamp"
 	"""
-	def __init__(self, name, id):
+	def __init__(self, name, id_):
 		self.name = name
-		self.id = id
+		self.id = id_
 		self.hand = Pile()
 		self.knowledge = []
 		self.points = 0
@@ -74,7 +74,7 @@ class Player():
 	def getID(self):
 		return self.id
 
-	def getName(self)
+	def getName(self):
 		return self.name
 
 	def getPoints(self):
@@ -85,6 +85,9 @@ class Player():
 
 	def getKnowledge(self):
 		return self.knowledge
+
+	def hand_tostr(self):
+		return str(self.hand)
 
 	# ------------------------------------------------------------------------------
 	# Python Methods
@@ -116,3 +119,6 @@ class Player():
 
 	def __next__(self):
 		return self.hand.__next__()
+
+	def __eq__(self, other):
+		return self.getID() == other.getID()
