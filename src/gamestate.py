@@ -55,6 +55,10 @@ class Gamestate():
 	def getPlayers(self):
 		pass
 
+	# TODO
+	def getPileNumbers(self):
+		pass
+
 	# ------------------------------------------------------------------------------
 	# Gamestate - Action interactions
 
@@ -248,7 +252,7 @@ class TestGamestateClass(unittest.TestCase):
 
 	def test_pileToPlayer(self):
 		# Setup piles
-		self.single.piles[0] = Pile(max_size=5)
+		self.single.piles[0] = Pile(max_size=2)
 		self.single.piles[1] = Pile(enforce_order=True)
 		self.single.piles[0].push(Card(2,1))
 		self.single.piles[1].push(Card(2,2))
@@ -291,11 +295,51 @@ class TestGamestateClass(unittest.TestCase):
 		self.assertTrue(Card(2,3) not in self.single.piles[1])
 
 	def test_playerToPile(self):
+		# Setup piles
+		self.single.piles[0] = Pile(max_size=2)
+		self.single.piles[1] = Pile(enforce_order=True)
+		self.single.players[0].push(Card(2,1))
+		self.single.players[1].push(Card(2,2))
+		self.single.players[1].push(Card(2,3))
+		self.single.players[0].push(Card(14,3))
 
+		# Pile doesn't exist, card should move!
+		test1 = self.single.playerToPile(self.players[0], 3, Card(14,3))
+		self.assertTrue(test1)
+		self.assertTrue(Card(14,3) not in self.players[0])
+		self.assertTrue(Card(14,1) in self.single.piles[3])
+		self.assertTrue(self.single.piles[2] == None)
 
+		# Player doesn't exist
+		test2 = self.single.playerToPile(Player("Zulu", "Z-1"), 0, Card(2,1))
+		self.assertFalse(test2)
+		self.assertTrue(Card(2,1) not in self.single.piles[0])
 
+		# Card doesn't exist
+		test3 = self.single.playerToPile(self.players[0], 0, Card(2,0))
+		self.assertFalse(test3)
+		self.assertTrue(Card(2,0) not in self.players[0])
+		self.assertTrue(Card(2,0) not in self.single.piles[0])
 
+		# Pile with max_size
+		test3 = self.single.playerToPile(self.players[0], 0, Card(2,1))
+		test4 = self.single.playerToPile(self.players[1], 0, Card(2,2))
+		test5 = self.single.playerToPile(self.players[1], 0, Card(2,3))
+		self.assertTrue(test3)
+		self.assertTrue(test4)
+		self.assertFalse(test5)
+		self.assertTrue(Card(2,1) not in self.players[0])
+		self.assertTrue(Card(2,2) not in self.players[1])
+		self.assertTrue(Card(2,3) in self.players[1])
+		self.assertTrue(Card(2,1) in self.single.piles[0])
+		self.assertTrue(Card(2,2) in self.single.piles[0])
+		self.assertTrue(Card(2,3) not in self.single.piles[0])
 
+		# Postconditions
+		test6 = self.single.playerToPile(self.players[1], 1, Card(2,3))
+		self.assertTrue(test6)
+		self.assertTrue(Card(2,3) in self.players[1])
+		self.assertTrue(Card(2,3) not in self.single.piles[1])
 
 	def tearDown(self):
 		self.single = None

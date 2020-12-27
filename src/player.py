@@ -44,18 +44,27 @@ class Player():
 	""" push(card)
 	Push a new card into the player's hand
 	@param card : Card - the card to add to the player's hand
+	@return : boolean - true if push successful, false if max_size
 	"""
 	def push(self, card):
-		self.hand.push(card)
+		if self.getHandSize() < self.max_size:
+			self.hand.push(card)
+			return True
+		else:
+			ERROR.write("Invalid Push: Inserting into player hand would violate max_size.")
+			return False
+
 
 	""" push_sort(card)
 	Push a new card into the player's hand and sort the hand
 	Postcondition: The player's hand is in sorted order
 	@param card : Card - the card to add to the player's hand
+	@return : boolean - true if successful, false if max_size
 	"""
 	def push_sort(self,card):
-		self.push(card)
+		result = self.push(card)
 		self.hand.sort()
+		return result
 
 	""" remove(card)
 	Remove the specified card from the player's hand
